@@ -23,15 +23,15 @@ connection.connect(function (err) {
 });
 
 
-function loadProducts() {
-  connection.query("SELECT * FROM products ", function (err, res) {
+const loadProducts = () => {
+  connection.query("SELECT * FROM products ", (err, res) => {
     if (err) {
       throw err;
     }
     console.table(res);
     promptCustomerForItem(res);
   });
-};
+}
 
 const promptCustomerForItem = inventory => {
     inquirer
@@ -69,14 +69,14 @@ const checkInventory = (choiceId, inventory) => {
   //   }
   // }
   // return null;
-  const item = inventory.filter(item => item.item_id === choiceId);
+  const item = inventory.filter(item => item.id === choiceId);
   return item.length > 0 ? item[0] : null;
 } 
 
 const makePurchase = (product, quantity) => {
   connection.query(
-    "UPDATE products SET stock_quantity = stock_quantity - ? WHERE item_id = ?",
-    [quantity, product.item_id],
+    "UPDATE products SET stock_quantity = stock_quantity - ? WHERE id = ?",
+    [quantity, product.id],
     function(err, res) {
       // Let the user know the purchase was successful, re-run loadProducts
       console.log("\nSuccessfully purchased " + quantity + " " + product.product_name + "'s!");
